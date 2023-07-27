@@ -1,0 +1,57 @@
+<!DOCTYPE html> = $0
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>菜鸟教程(runoob.com)</title>
+    <script>
+		document.write("测试输出1")
+        function showDate() {
+            document.getElementById("demo").innerHTML = Date();
+        }
+		class head{
+			constructor(){
+				this.status=0;
+				this.add();
+			}
+			add(){
+				this.status++;
+				this.refreashHTML();
+			}
+			refreashHTML(){
+				document.getElementById("firstJSProgram").innerHTML="我的第"+this.status.toString()+"个JavaScript程序";
+			}
+		}
+		var h=new head();
+		function addJS(){
+			
+			h.add();
+		}
+    </script>
+	<style>
+		p
+		{
+			background-color:chartreuse;
+		}
+		p.padding2
+		{
+			padding-top:10px;
+			padding-bottom:25px;
+			padding-right:30px;
+			padding-left:30px;
+		}
+	</style>
+	<div style="opacity:0.7;position:absolute;left:123px;top:100px;width:100px;height:150px;background-color:#40B3DF">这里面可以写字的</div>
+</head>
+
+<body>
+
+    <h1 id="firstJSProgram">我的第一个 JavaScript 程序</h1>
+    <p id="demo" class="padding2">这是一个段落</p>
+
+    <button type="button" onclick="showDate()">显示日期</button>
+	<button type="button" onclick="addJS()">再写一个JS</button>
+
+</body>
+
+</html>
