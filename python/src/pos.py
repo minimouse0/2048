@@ -28,3 +28,11 @@ class IntPos:
     def getNearby(self,path:list[tuple[Direction,int]]):
         targetPos=IntPos(self.x,self.y,self.z,self.dimid)
         return targetPos.move(path)
+    def toDict(self)->dict:
+        target=dict()
+        target["x"]=self.x
+        target["y"]=self.y
+        target["z"]=self.z
+        target["dim"]=self.dim
+        target["dimid"]=self.dimid
+        return target

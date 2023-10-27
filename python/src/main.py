@@ -2,6 +2,8 @@ from src.chessboard import *
 from src.chessboard_renderer import *
 from src.pos import *
 
+#with open('gamerecords.json', 'w') as f:
+
 def startConsoleGameLoop():
     while chessboard.checkGameOver() is False:
         try:
@@ -11,6 +13,8 @@ def startConsoleGameLoop():
             break
         chessboard.playerPush(direction)
         print(refresh_chessboard(chessboard))
+        with open('gamerecords.json', 'w+') as f:
+            f.write(chessboard.__str__())
     print("死了啦，都你害的啦")
 def key2Direction(key:str):
     if key.startswith("w"):

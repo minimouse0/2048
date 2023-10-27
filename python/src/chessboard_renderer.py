@@ -37,7 +37,7 @@ def fixed_length(arg:int,len:int)->str:
     res=res+str(arg)
     return res
 
-def refresh_chessboard(chessboard:Chessboard):
+def refresh_chessboard(chessboard:Chessboard)->str:
     global chessboard_on_screen
     chessboard_on_screen=chessboard
     return render_chessboard(chessboard)

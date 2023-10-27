@@ -4,6 +4,7 @@ from typing import Any,Callable, overload
 from enum import Enum
 from src.pos import *
 import random
+import json
 class BlockedReason(Enum):
     """无法移动或传送的原因"""
     NotBlocked=0
@@ -73,6 +74,7 @@ class Piece:
                 #再尝试向下看看这次能不能合并
                 #newPiece.push(direction)
             #print(self.getValue())#
+        
     def abandon(self):
         self._grid=None
     def getValue(self)->int:
@@ -80,6 +82,11 @@ class Piece:
         return self._value
     def getPieceBeside(self,direction:Direction):
         return self._grid.getChessboard().getGrid(self.getPos().getNearby([(direction,1)])).getPiece()
+    def toDict(self):
+        target=dict()
+        target["value"]=self._value
+        target["merged"]=self._merged
+        return target
 class Grid:
     """棋盘格子"""
     def __init__(self,pos:IntPos,chessboard)->None:
@@ -115,6 +122,14 @@ class Grid:
         old_piece.abandon()
         self._piece=None
         return old_piece
+    def toDict(self)->dict:
+        target=dict()
+        if self.getPiece() is None:
+            target["piece"]=None
+        else:
+            target["piece"]=self.getPiece().toDict()
+        target["pos"]=self.getPos().toDict()
+        return target
 class Chessboard:
     """棋盘自身"""
     #横向为x，纵向为y
@@ -122,6 +137,7 @@ class Chessboard:
         self.xsize=xsize
         self.ysize=ysize
         self._grids:list[list[Grid]]=list()
+        self._pushRecords=list()
         """外层为y，内层为x，访问的时候也是先确定纵向再确定横向"""
         #此处对最外层也就是纵向进行了遍历
         for y in range(0,ysize):
@@ -132,6 +148,7 @@ class Chessboard:
     def getGrid(self,pos:IntPos)->Grid:
         return self._grids[pos.y][pos.x]
     def forEach(self,function:Callable[[Grid],Any]):
+        """遍历棋盘上所有的格子，不管里面有没有棋子"""
         for y in range(0,self.ysize):
             for x in range(0,self.xsize):
                 function(self.getGrid(IntPos(x,y)))
@@ -161,6 +178,12 @@ class Chessboard:
     def clearMergedMarks(self):
         for currentPiece in self.getAllPieces():
             currentPiece.markUnmerged()
+    def toChessboardStatusList(self)->list:
+        target=list()
+        def currentGridHandler(currentGrid:Grid):
+            target.append(currentGrid.toDict())
+        self.forEach(currentGridHandler)
+        return target
     def chessboardComparison(self,chessboard)->bool:
         """
         比较自己和传入的另一个棋盘是否相同
@@ -238,6 +261,7 @@ class Chessboard:
         pushSuccess=self.tryPush(direction)
         if pushSuccess is True:
             self.randomNew()
+            self._pushRecords.append(self.toChessboardStatusList())
         else:
             print("玩家移动：无法移动！")
         return pushSuccess
@@ -255,3 +279,9 @@ class Chessboard:
             if self.canPush(direction) is True:
                 availale=True
         return not availale
+    def __str__(self)->str:
+        target=dict()
+        target["protocol"]=1
+        target["size"]={"x":self.xsize,"y":self.ysize}
+        target["chessboards"]=self._pushRecords
+        return json.dumps(target)
