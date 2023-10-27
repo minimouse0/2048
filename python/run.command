@@ -1,2 +1,2 @@
-cd /Users/huachengxu/Library/CloudStorage/OneDrive-Personal/code/game2048/python
+cd "$( dirname "$0" )"
 python3 __init__.py

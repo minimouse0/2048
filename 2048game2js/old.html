@@ -12,7 +12,7 @@
 		class head{
 			constructor(){
 				this.status=0;
-				this.add();
+				//this.add();
 			}
 			add(){
 				this.status++;
@@ -22,9 +22,8 @@
 				document.getElementById("firstJSProgram").innerHTML="我的第"+this.status.toString()+"个JavaScript程序";
 			}
 		}
-		var h=new head();
+		let h=new head();
 		function addJS(){
-			
 			h.add();
 		}
     </script>
